@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Anomaly {
+namespace Anomaly
+{
 
     public class UpdateManager : MonoBehaviour
     {
-        private static Utils.LList<IUpdate> updateList;
+        private static Utils.LList<IUpdate> updateList = new Utils.LList<IUpdate>();
         private static HashSet<IUpdate> deleteQueue;
 
         public static void Register(IUpdate inst)

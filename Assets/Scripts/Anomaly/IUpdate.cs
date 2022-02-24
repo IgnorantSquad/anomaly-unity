@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IUpdate
+namespace Anomaly
 {
-    void OnFixedUpdate(float dt);
-    void OnUpdate(float dt);
-    void OnLateUpdate(float dt);
+    public interface IUpdate
+    {
+        void OnFixedUpdate(float dt);
+        void OnUpdate(float dt);
+        void OnLateUpdate(float dt);
+    }
 }

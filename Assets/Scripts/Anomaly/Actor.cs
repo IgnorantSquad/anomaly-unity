@@ -4,57 +4,80 @@ using UnityEngine;
 
 namespace Anomaly
 {
-    public class Actor : MonoBehaviour
+    public partial class Actor : MonoBehaviour, IUpdate
     {
-        [SerializeField]
-        private string guid = System.Guid.NewGuid().ToString();
-        public string GUID => guid;
+        public BehaviorManager Behavior { get; protected set; }
+        public ActorStatus Status { get; protected set; }
+
+
+        private void Awake()
+        {
+            Behavior = new BehaviorManager(this);
+            Status = new ActorStatus();
+
+            OnInitialized();
+        }
+
+
+        protected virtual void OnInitialized()
+        {
+        }
+
+
+        public void OnFixedUpdate(float dt)
+        {
+            Behavior.OnFixedUpdate(dt);
+        }
+
+        public void OnUpdate(float dt)
+        {
+            Behavior.OnUpdate(dt);
+        }
+
+        public void OnLateUpdate(float dt)
+        {
+            Behavior.OnLateUpdate(dt);
+        }
+
+    }
+}
+
+
 
 #if UNITY_EDITOR
-        public virtual void OnInspectorGUI(Object target)
+namespace Anomaly
+{
+    public partial class Actor
+    {
+        public virtual void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject target)
         {
             GUILayout.Label("Actor");
         }
-#endif
     }
+}
 
-#if UNITY_EDITOR
-    [UnityEditor.CustomEditor(typeof(Actor), true)]
-    public class ActorEditor : UnityEditor.Editor
+namespace Anomaly.Editor
+{
+    using UnityEditor;
+
+    [CustomEditor(typeof(Actor), true)]
+    public class ActorEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             var self = target as Actor;
 
-            GUILayout.BeginHorizontal("box");
-            GUILayout.FlexibleSpace();
-            GUILayout.Label(self.GUID);
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-
             GUILayout.Space(10);
 
-            UnityEditor.EditorGUI.BeginChangeCheck();
-            self.OnInspectorGUI(target);
-            if (UnityEditor.EditorGUI.EndChangeCheck())
+            EditorGUI.BeginChangeCheck();
+            self.OnInspectorGUI(this, serializedObject);
+            if (EditorGUI.EndChangeCheck())
             {
-                UnityEditor.EditorUtility.SetDirty(target);
+                serializedObject.ApplyModifiedProperties();
+                EditorUtility.SetDirty(target);
                 UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(self.gameObject.scene);
             }
         }
     }
-#endif 
-
-    public class ActorSpawner : MonoBehaviour
-    {
-        [SerializeField]
-        private Actor[] actors;
-
-        public Actor Spawn(int index = -1)
-        {
-            if (index < 0) index = Random.Range(0, actors.Length);
-
-            return Instantiate(actors[index]);
-        }
-    }
 }
+#endif

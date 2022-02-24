@@ -1,11 +1,11 @@
 namespace Anomaly
 {
-    public interface IComponent
+    public interface IComponent : IUpdate
     {
-        void Initialize(Actor actor);
+        void Initialize(UnityEngine.Object target);
 
 #if UNITY_EDITOR
-        void OnInspectorGUI(UnityEngine.Object target);
+        void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedProperty target);
 #endif
     }
 }

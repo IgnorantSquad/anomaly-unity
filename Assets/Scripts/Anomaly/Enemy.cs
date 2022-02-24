@@ -4,17 +4,25 @@ using UnityEngine;
 
 namespace Anomaly
 {
-    public class Enemy : Actor
+    public partial class Enemy : Actor
     {
         [SerializeField]
-        private ActorPhysics physics = new ActorPhysics();
-        public ActorPhysics Physics => physics;
-
-#if UNITY_EDITOR
-        public override void OnInspectorGUI(Object target)
-        {
-            physics.OnInspectorGUI(target);
-        }
-#endif
+        private ActorPhysicsComponent physics = new ActorPhysicsComponent();
+        public ActorPhysicsComponent Physics => physics;
     }
 }
+
+
+
+#if UNITY_EDITOR
+namespace Anomaly
+{
+    public partial class Enemy
+    {
+        public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject target)
+        {
+            physics.OnInspectorGUI(editor, target.FindProperty(nameof(physics)));
+        }
+    }
+}
+#endif

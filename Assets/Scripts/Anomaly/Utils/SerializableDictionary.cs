@@ -1,22 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Anomaly.Utils
 {
     [System.Serializable]
-    public class SerializableDictionary<_Typ> : ISerializationCallbackReceiver where _Typ : UnityEngine.Object
+    public partial class SerializableDictionary<_Typ> : ISerializationCallbackReceiver
     {
+        #region Constructor
         public SerializableDictionary() { }
-        public SerializableDictionary(string defaultKey, _Typ defaultValue = null)
+        public SerializableDictionary(string defaultKey, _Typ defaultValue = default(_Typ))
         {
             keyList.Add(defaultKey);
             valueList.Add(defaultValue);
             OnAfterDeserialize();
-        } 
+        }
         public SerializableDictionary(IEnumerable<string> defaultKeys, IEnumerable<_Typ> defaultValues = null)
         {
             Debug.Assert(defaultKeys.Count() == defaultValues.Count());
@@ -24,9 +22,17 @@ namespace Anomaly.Utils
             valueList.AddRange(defaultValues);
             OnAfterDeserialize();
         }
+        #endregion
 
         public Dictionary<string, _Typ> Container { get; set; } = new Dictionary<string, _Typ>();
 
+        public _Typ Get(string key)
+        {
+            Debug.Assert(Container.TryGetValue(key, out var value));
+            return value;
+        }
+
+        #region Serialization
         [SerializeField]
         private List<string> keyList = new List<string>();
         [SerializeField]
@@ -37,61 +43,77 @@ namespace Anomaly.Utils
             Container.Clear();
             for (int i = 0; i < keyList.Count; ++i)
             {
+                if (Container.ContainsKey(keyList[i]))
+                {
+                    keyList[i] = System.Guid.NewGuid().ToString();
+                }
                 Container.Add(keyList[i], valueList[i]);
             }
             keyList = null;
             valueList = null;
         }
-
         public void OnBeforeSerialize()
         {
             keyList = Container.Keys.ToList();
             valueList = Container.Values.ToList();
         }
+        #endregion
+    }
+}
+
+
 
 #if UNITY_EDITOR
-        // Utils 클래스 같은걸로 묶어도 좋을듯
-        public void OnInspectorGUI(Object target, string fieldName = "")
+namespace Anomaly.Utils
+{
+    using UnityEditor;
+
+    public partial class SerializableDictionary<_Typ>
+    {
+        public void OnInspectorGUI(Editor editor, SerializedProperty target, string fieldName)
         {
+            OnBeforeSerialize();
+
             EditorGUILayout.BeginVertical("box");
+
+            var keyProperty = target.FindPropertyRelative(nameof(keyList));
+            var valueProperty = target.FindPropertyRelative(nameof(valueList));
 
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label(fieldName);
             if (GUILayout.Button("+", GUILayout.Width(40)))
             {
-                Container.Add(Container.Count.ToString(), null);
+                keyProperty.arraySize++;
+                keyProperty.GetArrayElementAtIndex(keyProperty.arraySize - 1).stringValue = System.Guid.NewGuid().ToString();
+                valueProperty.arraySize++;
             }
             EditorGUILayout.EndHorizontal();
 
-            OnBeforeSerialize();
-
-            EditorGUI.BeginChangeCheck();
-
-            for (int i = 0; i < keyList.Count; ++i)
+            for (int i = 0; i < keyProperty.arraySize; ++i)
             {
                 EditorGUILayout.BeginHorizontal();
-                keyList[i] = EditorGUILayout.TextField(keyList[i], GUILayout.Width(120));
-                valueList[i] = EditorGUILayout.ObjectField(valueList[i], typeof(_Typ), true) as _Typ;
+
+                EditorGUILayout.PropertyField(keyProperty.GetArrayElementAtIndex(i), new GUIContent(""), GUILayout.Width(120));
+                GUILayout.Space(5);
+                EditorGUILayout.PropertyField(valueProperty.GetArrayElementAtIndex(i), new GUIContent(""));
+
                 GUILayout.Space(40);
+
                 Color prevColor = GUI.backgroundColor;
                 GUI.backgroundColor = Color.red;
                 if (GUILayout.Button("-", GUILayout.Width(40)))
                 {
-                    keyList.RemoveAt(i);
-                    valueList.RemoveAt(i);
-                    i--;
+                    keyProperty.DeleteArrayElementAtIndex(i);
+                    valueProperty.DeleteArrayElementAtIndex(i);
+                    break;
                 }
                 GUI.backgroundColor = prevColor;
-                EditorGUILayout.EndHorizontal();
-            }
 
-            if (EditorGUI.EndChangeCheck())
-            {
-                OnAfterDeserialize();
+                EditorGUILayout.EndHorizontal();
             }
 
             EditorGUILayout.EndVertical();
         }
-#endif
     }
 }
+#endif
