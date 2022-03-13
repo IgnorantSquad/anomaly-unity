@@ -7,7 +7,7 @@ namespace Anomaly
     public class BehaviorManager
     {
         private IBehavior baseBehavior;
-        private Utils.LList<IBehavior> overlayBehaviors = new Utils.LList<IBehavior>();
+        private List<IBehavior> overlayBehaviors = new List<IBehavior>();
 
         private Actor targetActor;
 
@@ -27,7 +27,10 @@ namespace Anomaly
             baseBehavior = behavior;
             if (clear)
             {
-                overlayBehaviors.Foreach(b => b.OnExit(targetActor));
+                for (int i = 0; i < overlayBehaviors.Count; ++i)
+                {
+                    overlayBehaviors[i].OnExit(targetActor);
+                }
                 overlayBehaviors.Clear();
             }
             baseBehavior?.OnEnter(targetActor);
@@ -49,7 +52,10 @@ namespace Anomaly
             baseBehavior?.OnExit(targetActor);
             if (clear)
             {
-                overlayBehaviors.Foreach(b => b.OnExit(targetActor));
+                for (int i = 0; i < overlayBehaviors.Count; ++i)
+                {
+                    overlayBehaviors[i].OnExit(targetActor);
+                }
                 overlayBehaviors.Clear();
             }
             baseBehavior = null;
@@ -59,19 +65,28 @@ namespace Anomaly
         public void OnFixedUpdate(float dt)
         {
             baseBehavior?.OnFixedUpdate(targetActor, dt);
-            overlayBehaviors.Foreach(b => b.OnFixedUpdate(targetActor, dt));
+            for (int i = 0; i < overlayBehaviors.Count; ++i)
+            {
+                overlayBehaviors[i].OnFixedUpdate(targetActor, dt);
+            }
         }
 
         public void OnUpdate(float dt)
         {
             baseBehavior?.OnUpdate(targetActor, dt);
-            overlayBehaviors.Foreach(b => b.OnUpdate(targetActor, dt));
+            for (int i = 0; i < overlayBehaviors.Count; ++i)
+            {
+                overlayBehaviors[i].OnUpdate(targetActor, dt);
+            }
         }
 
         public void OnLateUpdate(float dt)
         {
             baseBehavior?.OnLateUpdate(targetActor, dt);
-            overlayBehaviors.Foreach(b => b.OnLateUpdate(targetActor, dt));
+            for (int i = 0; i < overlayBehaviors.Count; ++i)
+            {
+                overlayBehaviors[i].OnLateUpdate(targetActor, dt);
+            }
         }
     }
 }

@@ -7,12 +7,15 @@ namespace Anomaly
     public partial class Actor : MonoBehaviour, IUpdate
     {
         public BehaviorManager Behavior { get; protected set; }
+        public EventManager EventManager { get; protected set; }
+
         public ActorStatus Status { get; protected set; }
 
 
         private void Awake()
         {
             Behavior = new BehaviorManager(this);
+            EventManager = new EventManager(this);
             Status = new ActorStatus();
 
             OnInitialized();

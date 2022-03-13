@@ -16,7 +16,7 @@ namespace Anomaly
 
             Behavior.SetBehavior(new PlayerLocomotionBehavior());
 
-            UpdateManager.Register(this);
+            UpdateManager.Instance.Register(this);
         }
     }
 }
