@@ -14,8 +14,7 @@ namespace Anomaly.Utils
         private SerializableDictionary<_Typ> otherValues = new SerializableDictionary<_Typ>();
 
         public _Typ Default => defaultValue;
-        public _Typ Get(string key) => otherValues.Get(key);
-        public _Typ Get(ActorState state) => state == ActorState.DEFAULT ? defaultValue : otherValues.Get(state.ToString());
+        public _Typ Get(string key = "") => string.IsNullOrEmpty(key) ? defaultValue : otherValues.Get(key);
     }
 }
 
