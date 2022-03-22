@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Anomaly.Temp
+namespace Anomaly
 {
     public class CompositeBehavior : IBehavior
     {

@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Anomaly.Temp
+namespace Anomaly
 {
     public enum BehaviorType
     {
         BASIC_LOCOMOTION
     }
 
-    public class BehaviorManagerComponent : IComponent
+    public class BehaviorComponent : CustomComponent
     {
         private Dictionary<BehaviorType, IBehavior> behaviorDictionary = new Dictionary<BehaviorType, IBehavior>();
         private IBehavior baseBehavior;
 
         private Actor targetActor;
-
-        public BehaviorManagerComponent(Actor actor)
-        {
-            this.targetActor = actor;
-        }
 
         public void SetTargetActor(Actor actor)
         {
@@ -55,27 +50,22 @@ namespace Anomaly.Temp
         }
 
 
-        public void OnFixedUpdate(float dt)
+        public void OnFixedUpdate()
         {
-            baseBehavior?.OnFixedUpdate(targetActor, dt);
+            baseBehavior?.OnFixedUpdate(targetActor, Time.fixedDeltaTime);
+        }
+        public void OnUpdate()
+        {
+            baseBehavior?.OnUpdate(targetActor, Time.deltaTime);
+        }
+        public void OnLateUpdate()
+        {
+            baseBehavior?.OnLateUpdate(targetActor, Time.deltaTime);
         }
 
-        public void OnUpdate(float dt)
-        {
-            baseBehavior?.OnUpdate(targetActor, dt);
-        }
-
-        public void OnLateUpdate(float dt)
-        {
-            baseBehavior?.OnLateUpdate(targetActor, dt);
-        }
-
-        public void Initialize(Object target)
-        {
-        }
 
 #if UNITY_EDITOR
-        public void OnInspectorGUI(UnityEditor.Editor editor, SerializedProperty target)
+        public override void OnInspectorGUI(UnityEditor.Editor editor, SerializedProperty target)
         {
         }
 #endif

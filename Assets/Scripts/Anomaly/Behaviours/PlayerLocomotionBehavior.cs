@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Anomaly.Temp
+namespace Anomaly
 {
 
     public class PlayerLocomotionBehavior : IBehavior
@@ -24,9 +24,9 @@ namespace Anomaly.Temp
 
             Vector3 dir = new Vector3(h, 0F, v);
 
-            var physics = (actor as Player).Physics;
+            //var physics = actor.Physics;
 
-            physics.Move(dir * dt * physics.MoveSpeed);
+            //physics.Move(dir * dt * physics.MoveSpeed);
         }
 
         public void OnUpdate(Actor actor, float dt)
