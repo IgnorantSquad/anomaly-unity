@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Anomaly.Utils
 {
-    public class PoolObject : CustomObject
+    public class PoolObject : CustomBehaviour
     {
 
         public string uniqueName = "";

@@ -4,25 +4,25 @@ using UnityEngine;
 
 namespace Anomaly
 {
-    public class Player : CustomObject
+    public class Player : Actor
     {
         [SerializeField]
-        private ActorPhysicsData physicsData;
-
-        [SerializeField]
         private PhysicsComponent physics = new PhysicsComponent();
+        public PhysicsComponent actorPhysics => physics;
 
-        private TransformComponent transformComponent = new TransformComponent();
-
-        void OnFixedUpdate()
+        protected override void Initialize()
         {
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical") * 0F;
+            base.Initialize();
+            InitializeComponent(actorPhysics);
 
-            Vector3 dir = new Vector3(h, 0F, v);
-
-            physics.Move(dir * Time.deltaTime * physicsData.moveSpeed.Default);
+            actorStateMachine.AddStates(
+                State.Bind(
+                    State.New<PlayerLocomotionState>(),
+                    State.New<PlayerInteractionState>())
+            );
+            actorStateMachine.Run();
         }
+
 
 #if UNITY_EDITOR
         public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject)

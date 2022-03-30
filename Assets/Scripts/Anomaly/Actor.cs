@@ -4,22 +4,34 @@ using UnityEngine;
 
 namespace Anomaly
 {
-    public class Actor : CustomObject
+    public class Actor : CustomBehaviour
     {
-        public BehaviorComponent Behavior { get; set; }
+        public TransformComponent actorTransform { get; protected set; } = new TransformComponent();
+        public AnimationComponent actorAnimation { get; protected set; } = new AnimationComponent();
+        public StateMachineComponent actorStateMachine { get; protected set; } = new StateMachineComponent();
+
+        public InteractorComponent actorInteractor { get; protected set; } = new InteractorComponent();
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+            InitializeComponent(actorTransform, actorAnimation, actorStateMachine, actorInteractor);
+        }
 
 
-        void OnFixedUpdate()
+        // TODO: component's update manager is required
+        public void OnFixedUpdate()
         {
-            Behavior.OnFixedUpdate();
+            actorStateMachine.OnFixedUpdate();
         }
-        void OnUpdate()
+        public void OnUpdate()
         {
-            Behavior.OnUpdate();
+            actorStateMachine.OnUpdate();
+            actorInteractor.OnUpdate();
         }
-        void OnLateUpdate()
+        public void OnLateUpdate()
         {
-            Behavior.OnLateUpdate();
+            actorStateMachine.OnLateUpdate();
         }
     }
 }

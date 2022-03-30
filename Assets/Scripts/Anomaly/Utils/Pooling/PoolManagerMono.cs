@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Anomaly.Utils
 {
-    public class PoolManagerMono : CustomObject
+    public class PoolManagerMono : CustomBehaviour
     {
 
         [SerializeField] PoolObject[] prefabs;
