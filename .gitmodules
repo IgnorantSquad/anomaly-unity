@@ -1,0 +1,3 @@
+[submodule "Assets/Anomaly"]
+	path = Assets/Anomaly
+	url = git@gitlab.com:ignorant-squad/anomaly-system.git
