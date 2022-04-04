@@ -1,45 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Anomaly;
 
-namespace Anomaly
+
+public class PlayerInteractionState : State
 {
-    public class PlayerInteractionState : State
+    public override Identity ID => State.Identity.PlayerInteraction;
+
+    private TriggerListener trigger;
+
+    public override void OnEnter(CustomBehaviour target)
     {
-        public override Identity ID => State.Identity.PlayerInteraction;
+        trigger = target.GetComponent<TriggerListener>();
+    }
 
-        private TriggerListener trigger;
+    public override void OnExit(CustomBehaviour target)
+    {
 
-        public override void OnEnter(CustomBehaviour target)
+    }
+
+    public override void OnFixedUpdate(CustomBehaviour target)
+    {
+    }
+
+    public override void OnUpdate(CustomBehaviour target)
+    {
+        if (trigger.colliderList.Count == 0) return;
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            trigger = target.GetComponent<TriggerListener>();
-        }
-
-        public override void OnExit(CustomBehaviour target)
-        {
-
-        }
-
-        public override void OnFixedUpdate(CustomBehaviour target)
-        {
-        }
-
-        public override void OnUpdate(CustomBehaviour target)
-        {
-            if (trigger.colliderList.Count == 0) return;
-            if (Input.GetKeyDown(KeyCode.F))
+            foreach (var coll in trigger.colliderList["Interactable"])
             {
-                foreach (var coll in trigger.colliderList["Interactable"])
-                {
-                    coll.GetComponent<Actor>().actorInteractor.Receive(target as Actor, new HitEvent(target as Actor, coll.GetComponent<Actor>()));
-                }
+                coll.GetComponent<Actor>().actorInteractor.Receive(target as Actor, new HitEvent(target as Actor, coll.GetComponent<Actor>()));
             }
-
         }
 
-        public override void OnLateUpdate(CustomBehaviour target)
-        {
+    }
 
-        }
+    public override void OnLateUpdate(CustomBehaviour target)
+    {
+
     }
 }
