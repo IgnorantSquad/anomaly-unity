@@ -31,4 +31,12 @@ public class Actor : Anomaly.CustomBehaviour
     {
         actorStateMachine.OnLateUpdate();
     }
+
+
+#if UNITY_EDITOR
+    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject)
+    {
+        actorAnimation.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(actorAnimation)));
+    }
+#endif
 }
