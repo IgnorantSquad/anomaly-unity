@@ -3,7 +3,7 @@ using Anomaly;
 
 public class Player : Actor
 {
-    [SerializeField]
+    [SerializeField, HideInInspector]
     private PhysicsComponent physics = new PhysicsComponent();
     public PhysicsComponent actorPhysics => physics;
 
@@ -22,8 +22,9 @@ public class Player : Actor
 
 
 #if UNITY_EDITOR
-    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject)
+    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject, UnityEditor.SerializedProperty targetProperty)
     {
+        base.OnInspectorGUI(editor, serializedObject, null);
         physics.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(physics)));
     }
 #endif

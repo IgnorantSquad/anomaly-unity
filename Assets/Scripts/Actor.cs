@@ -34,7 +34,7 @@ public class Actor : Anomaly.CustomBehaviour
 
 
 #if UNITY_EDITOR
-    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject)
+    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject, UnityEditor.SerializedProperty targetProperty)
     {
         actorAnimation.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(actorAnimation)));
     }
