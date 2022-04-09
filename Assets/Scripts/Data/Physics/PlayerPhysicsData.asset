@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: 
   moveSpeed:
-    defaultValue: 2
+    defaultValue: 10
     otherValues:
       keyList:
       - Run
       valueList:
       - 4
   jumpPower:
-    defaultValue: 50
+    defaultValue: 100
     otherValues:
       keyList: []
       valueList: []
