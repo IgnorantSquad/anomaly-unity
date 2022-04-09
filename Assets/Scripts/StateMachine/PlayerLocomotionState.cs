@@ -11,6 +11,8 @@ public class PlayerLocomotionState : State
     private Vector3 moveDir = Vector3.zero;
     private float gravity = 0F;
 
+    private Vector3 handlePos = new Vector3(5F, 0.5f, -10F);
+
     public override void OnEnter(CustomBehaviour target)
     {
 
@@ -49,6 +51,15 @@ public class PlayerLocomotionState : State
             gravity = 5F;
             player.actorPhysics.AddForce(Vector3.up * physicsData.jumpPower.Default, ForceMode.Impulse);
         }
+
+        //if (moveDir.x > 0F) handlePos = new Vector3(2.5f, 0.5f, -10F);
+        //else if (moveDir.x < 0F) handlePos = new Vector3(-2.5f, 0.5f, -10F);
+        if (Input.mousePosition.x > Screen.width * 0.5f) handlePos = new Vector3(2.5F, 0.5f, -10F);
+        else if (Input.mousePosition.x < Screen.width * 0.5f) handlePos = new Vector3(-2.5F, 0.5f, -10F);
+        //handlePos = moveDir.x > 0F ? new Vector3(5F, 0.5f, -10F) : moveDir.x < 0F ? new Vector3(-5F, 0.5f, -10F) : handlePos;
+
+        player.actorCamera.SetCameraHandlePosition(handlePos);
+        //player.actorCamera.SetCameraHandlePosition(new Vector3(5F * h, 0.5f, -10F));
     }
 
     public override void OnLateUpdate(CustomBehaviour target)

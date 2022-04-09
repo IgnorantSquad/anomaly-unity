@@ -7,6 +7,12 @@ public class Player : Actor
     private PhysicsComponent physics = new PhysicsComponent();
     public PhysicsComponent actorPhysics => physics;
 
+
+    [SerializeField, HideInInspector]
+    private CameraComponent camComponent = new CameraComponent();
+    public CameraComponent actorCamera => camComponent;
+
+
     protected override void Initialize()
     {
         base.Initialize();
@@ -26,6 +32,7 @@ public class Player : Actor
     {
         base.OnInspectorGUI(editor, serializedObject, null);
         physics.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(physics)));
+        camComponent.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(camComponent)));
     }
 #endif
 }
