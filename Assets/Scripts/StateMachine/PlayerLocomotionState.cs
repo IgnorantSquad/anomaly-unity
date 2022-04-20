@@ -54,8 +54,8 @@ public class PlayerLocomotionState : State
 
         //if (moveDir.x > 0F) handlePos = new Vector3(2.5f, 0.5f, -10F);
         //else if (moveDir.x < 0F) handlePos = new Vector3(-2.5f, 0.5f, -10F);
-        if (Input.mousePosition.x > Screen.width * 0.5f) handlePos = new Vector3(2.5F, 0.5f, -10F);
-        else if (Input.mousePosition.x < Screen.width * 0.5f) handlePos = new Vector3(-2.5F, 0.5f, -10F);
+        if (Input.mousePosition.x > Screen.width * 0.65f) handlePos = new Vector3(2.5F, 0.5f, -10F);
+        else if (Input.mousePosition.x < Screen.width * 0.35f) handlePos = new Vector3(-2.5F, 0.5f, -10F);
         //handlePos = moveDir.x > 0F ? new Vector3(5F, 0.5f, -10F) : moveDir.x < 0F ? new Vector3(-5F, 0.5f, -10F) : handlePos;
 
         player.actorCamera.SetCameraHandlePosition(handlePos);

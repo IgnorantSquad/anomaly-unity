@@ -14,9 +14,22 @@ public class CameraComponent : CustomComponent
     private Transform cameraHandle;
 
 
+    #region Camera Transform
     public void SetCameraHandlePosition(Vector3 pos) 
     {
         cameraHandle.localPosition = pos;
+    }
+    #endregion
+
+
+    public void SetOrthographicSize(float ortho = 7F) 
+    {
+        virtualCamera.m_Lens.OrthographicSize = ortho;
+    }
+
+    public void SetCameraBound(CompositeCollider2D coll) 
+    {
+        virtualCamera.GetComponent<CinemachineConfiner>().m_BoundingShape2D = coll;
     }
 
 
