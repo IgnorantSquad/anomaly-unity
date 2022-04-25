@@ -19,9 +19,9 @@ MonoBehaviour:
       keyList:
       - Run
       valueList:
-      - 4
+      - 16
   jumpPower:
-    defaultValue: 100
+    defaultValue: 0.3
     otherValues:
       keyList: []
       valueList: []

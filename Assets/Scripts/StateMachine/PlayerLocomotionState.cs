@@ -8,7 +8,7 @@ public class PlayerLocomotionState : State
 {
     public override Identity ID => State.Identity.PlayerLocomotion;
 
-    private Vector3 moveDir = Vector3.zero;
+    //private Vector3 moveDir = Vector3.zero;
     private float gravity = 0F;
 
     private Vector3 handlePos = new Vector3(5F, 0.5f, -10F);
@@ -26,30 +26,32 @@ public class PlayerLocomotionState : State
     public override void OnFixedUpdate(CustomBehaviour target)
     {
         var player = target as Player;
-        var physicsData = player.actorPhysics.CurrentPhysicsData;
+        var physicsData = player.actorCharacter.CurrentPhysicsData;
 
         float moveSpeed = Input.GetKey(KeyCode.LeftShift) ? physicsData.moveSpeed.Get("Run") : physicsData.moveSpeed.Default;
 
-        player.actorPhysics.Move(moveDir * Time.deltaTime * moveSpeed);
+        Vector3 moveDir = Vector3.right * Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime;
+        moveDir += player.actorCharacter.GetGravityVector();
+
+        //player.actorPhysics.Move(moveDir * Time.deltaTime * moveSpeed);
+        player.actorCharacter.Move(moveDir);
     }
 
     public override void OnUpdate(CustomBehaviour target)
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical") * 0F;
-        moveDir.x = h;
-
         var player = target as Player;
-        var physicsData = player.actorPhysics.CurrentPhysicsData;
+        var physicsData = player.actorCharacter.CurrentPhysicsData;
 
         //float moveSpeed = Input.GetKey(KeyCode.LeftShift) ? physicsData.moveSpeed.Get("Run") : physicsData.moveSpeed.Default;
 
         //player.actorPhysics.Move(dir * Time.deltaTime * moveSpeed);
 
-        if (Input.GetKeyDown(KeyCode.Space) && player.actorPhysics.IsGrounded)
+        player.actorCharacter.CalculateGravity();
+        
+        if (Input.GetKeyDown(KeyCode.Space) && player.actorCharacter.IsGrounded)
         {
-            gravity = 5F;
-            player.actorPhysics.AddForce(Vector3.up * physicsData.jumpPower.Default, ForceMode.Impulse);
+            player.actorCharacter.SetGravityValue(physicsData.jumpPower.Default);
+            //player.actorPhysics.AddForce(Vector3.up * physicsData.jumpPower.Default, ForceMode.Impulse);
         }
 
         //if (moveDir.x > 0F) handlePos = new Vector3(2.5f, 0.5f, -10F);

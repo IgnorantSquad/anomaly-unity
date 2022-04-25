@@ -9,6 +9,11 @@ public class Player : Actor
 
 
     [SerializeField, HideInInspector]
+    private CharacterComponent character = new CharacterComponent();
+    public CharacterComponent actorCharacter => character;
+
+
+    [SerializeField, HideInInspector]
     private CameraComponent camComponent = new CameraComponent();
     public CameraComponent actorCamera => camComponent;
 
@@ -31,7 +36,8 @@ public class Player : Actor
     public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject, UnityEditor.SerializedProperty targetProperty)
     {
         base.OnInspectorGUI(editor, serializedObject, null);
-        physics.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(physics)));
+        //physics.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(physics)));
+        character.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(character)));
         camComponent.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(camComponent)));
     }
 #endif

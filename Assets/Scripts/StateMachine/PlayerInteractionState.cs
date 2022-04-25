@@ -12,7 +12,7 @@ public class PlayerInteractionState : State
 
     public override void OnEnter(CustomBehaviour target)
     {
-        trigger = target.GetComponent<TriggerListener>();
+        trigger = target.GetComponentInChildren<TriggerListener>();
     }
 
     public override void OnExit(CustomBehaviour target)
@@ -26,6 +26,7 @@ public class PlayerInteractionState : State
 
     public override void OnUpdate(CustomBehaviour target)
     {
+        if (trigger == null) return;
         if (trigger.colliderList.Count == 0) return;
         if (Input.GetKeyDown(KeyCode.F))
         {
