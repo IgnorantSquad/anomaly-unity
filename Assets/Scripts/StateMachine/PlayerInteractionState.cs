@@ -32,7 +32,8 @@ public class PlayerInteractionState : State
         {
             foreach (var coll in trigger.colliderList["Interactable"])
             {
-                (target as Actor).actorInteractor.Send(coll.GetComponent<Actor>(), new HitEvent(target as Actor, coll.GetComponent<Actor>()));
+                Interactor.AddEvent(EventPool.Get<HitEvent>(), new EventParam() { sender = target.gameObject, receiver = coll.gameObject });
+                //(target as Actor).actorInteractor.Send(coll.GetComponent<Actor>(), new HitEvent(target as Actor, coll.GetComponent<Actor>()));
                 //coll.GetComponent<Actor>().actorInteractor.Receive(target as Actor, new HitEvent(target as Actor, coll.GetComponent<Actor>()));
             }
         }
