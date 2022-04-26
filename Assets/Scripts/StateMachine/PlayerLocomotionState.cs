@@ -28,10 +28,19 @@ public class PlayerLocomotionState : State
         var player = target as Player;
         var physicsData = player.actorCharacter.CurrentPhysicsData;
 
+        player.actorCharacter.CalculateGravity();
+
         float moveSpeed = Input.GetKey(KeyCode.LeftShift) ? physicsData.moveSpeed.Get("Run") : physicsData.moveSpeed.Default;
 
-        Vector3 moveDir = Vector3.right * Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime;
-        moveDir += player.actorCharacter.GetGravityVector();
+        Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime, player.actorCharacter.GravityValue, 0F);
+        Vector3 slideVector = player.actorCharacter.GetSlideVector(2F);
+
+        if (Mathf.Abs(moveDir.x + slideVector.x) < Mathf.Abs(moveDir.x) && moveDir.y <= 0F)
+        {
+            moveDir.x = 0F;
+        }
+
+        moveDir += slideVector;
 
         //player.actorPhysics.Move(moveDir * Time.deltaTime * moveSpeed);
         player.actorCharacter.Move(moveDir);
@@ -46,12 +55,17 @@ public class PlayerLocomotionState : State
 
         //player.actorPhysics.Move(dir * Time.deltaTime * moveSpeed);
 
-        player.actorCharacter.CalculateGravity();
         
         if (Input.GetKeyDown(KeyCode.Space) && player.actorCharacter.IsGrounded)
         {
             player.actorCharacter.SetGravityValue(physicsData.jumpPower.Default);
             //player.actorPhysics.AddForce(Vector3.up * physicsData.jumpPower.Default, ForceMode.Impulse);
+        }
+
+        if ((player.actorCharacter.IsGrounded && player.actorCharacter.GravityValue < 0F) 
+            ||(player.actorCharacter.IsCollidedAbove && player.actorCharacter.GravityValue > 0F))
+        {
+            player.actorCharacter.SetGravityValue(0F);
         }
 
         //if (moveDir.x > 0F) handlePos = new Vector3(2.5f, 0.5f, -10F);

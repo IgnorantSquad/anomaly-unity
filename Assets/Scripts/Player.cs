@@ -21,7 +21,7 @@ public class Player : Actor
     protected override void Initialize()
     {
         base.Initialize();
-        InitializeComponent(actorPhysics);
+        InitializeComponent(actorPhysics, actorCharacter);
 
         actorStateMachine.AddStates(
             State.Bind(

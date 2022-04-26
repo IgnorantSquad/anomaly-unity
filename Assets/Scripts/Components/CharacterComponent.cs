@@ -29,24 +29,39 @@ public class CharacterComponent : CustomComponent
 
 
     public float GravityValue => gravityValue;
-    public float DeltaGravityValue => gravityScale * Time.fixedDeltaTime * Physics.gravity.y * 0.02f; // threshold
 
 
     public CollisionFlags Move(Vector3 move) 
     {
-        latestFlag = controller.Move(move);
-        return latestFlag;
+        return (latestFlag = controller.Move(move));
     }
 
-    public Vector3 GetGravityVector() 
+    public Vector3 GetSlideVector(float slideSpeed)
     {
-        gravityValue += DeltaGravityValue;
-        //if (IsGrounded) gravityValue = 0F;
-        return Vector3.up * gravityValue;
+        var transform = target.transform;
+
+        float radius = controller.radius * transform.localScale.x;
+        float height = controller.height * transform.localScale.y;
+        Vector3 center = new Vector3(controller.center.x * transform.localScale.x, controller.center.y * transform.localScale.y, controller.center.z * transform.localScale.z);
+
+        Vector3 std = transform.position + center - transform.up * (height - 1F) * 0.5f;
+
+        bool cast = Physics.SphereCast(transform.position + center, radius, -transform.up, out var hit, (height - 1F) * 0.5f + radius) && !Physics.Raycast(std, -transform.up, radius * 1.5f);
+        Debug.DrawRay(transform.position, -transform.up * ((height - 1F) * 0.5f + radius), Color.blue);
+        if (!cast) return Vector3.zero;
+
+        float cos = Mathf.Max(Vector3.Dot(-transform.up, (hit.point - std).normalized), 0.01f);
+
+        float dot = Vector3.Dot(Vector3.Cross(hit.point - std, -transform.up), transform.forward);
+
+        float threshold = Mathf.Pow(Mathf.Sin(Mathf.Acos(cos)), 0.1f);
+
+        return (transform.right * Mathf.Sign(dot) - transform.up) * threshold * Time.fixedDeltaTime * slideSpeed;
     }
+
     public void CalculateGravity() 
     {
-        if (IsGrounded) gravityValue = 0F;
+        gravityValue += gravityScale * Time.fixedDeltaTime * Physics.gravity.y;
     }
 
 
