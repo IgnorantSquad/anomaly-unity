@@ -3,44 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using Anomaly;
 
-[System.Serializable]
 public class StateMachineComponent : CustomComponent
 {
-    private List<State> states = new List<State>();
-    public State CurrentState { get; private set; }
-
-    public void AddStates(params State[] states)
+    [System.Serializable]
+    [SharedComponentData(typeof(StateMachineComponent))]
+    public class Data : CustomComponent.BaseData
     {
-        this.states.AddRange(states);
+        public CustomBehaviour caller;
+        [SerializeField] private List<State> states = new List<State>();
+
+
+        public List<State> States => states;
+
+        public State CurrentState { get; set; }
+
+
+        public void AddStates(params State[] states)
+        {
+            this.states.AddRange(states);
+        }
     }
 
-    public void Run(int entryIndex = 0)
+
+    public void Run(Data target, int entryIndex = 0)
     {
-        Debug.Assert(entryIndex >= 0 && entryIndex < states.Count);
-        ChangeState(entryIndex);
+        Debug.Assert(entryIndex >= 0 && entryIndex < target.States.Count);
+        ChangeState(target, entryIndex);
     }
 
-    public void ChangeState(State.Identity id)
+    public void ChangeState(Data target, State.Identity id)
     {
-        ChangeState(states.FindIndex(s => s.ID == id));
+        ChangeState(target, target.States.FindIndex(s => s.ID == id));
     }
 
-    public void ChangeState(int index)
+    public void ChangeState(Data target, int index)
     {
-        CurrentState?.OnExit(target);
-        CurrentState = states[index];
-        CurrentState?.OnEnter(target);
+        target.CurrentState?.OnExit(target.caller);
+        target.CurrentState = target.States[index];
+        target.CurrentState?.OnEnter(target.caller);
     }
 
-    public void OnFixedUpdate() => CurrentState?.OnFixedUpdate(target);
-    public void OnUpdate() => CurrentState?.OnUpdate(target);
-    public void OnLateUpdate() => CurrentState?.OnLateUpdate(target);
-
-
-#if UNITY_EDITOR
-    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedProperty target)
-    {
-
-    }
-#endif
+    public void OnFixedUpdate(Data target) => target.CurrentState?.OnFixedUpdate(target.caller);
+    public void OnUpdate(Data target) => target.CurrentState?.OnUpdate(target.caller);
+    public void OnLateUpdate(Data target) => target.CurrentState?.OnLateUpdate(target.caller);
 }

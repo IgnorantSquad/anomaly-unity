@@ -4,39 +4,33 @@ using UnityEngine;
 
 public class Actor : Anomaly.CustomBehaviour
 {
-    public TransformComponent actorTransform { get; protected set; } = new TransformComponent();
-    public AnimationComponent actorAnimation { get; protected set; } = new AnimationComponent();
-    public StateMachineComponent actorStateMachine { get; protected set; } = new StateMachineComponent();
+    public AnimationComponent.Data animationData;
+    
+    public StateMachineComponent.Data stateMachineData;
 
-    public InteractorComponent actorInteractor { get; protected set; } = new InteractorComponent();
+
+    protected StateMachineComponent stateMachine;
+
 
     protected override void Initialize()
     {
         base.Initialize();
-        InitializeComponent(actorTransform, actorAnimation, actorStateMachine, actorInteractor);
+
+        stateMachine = GetSharedComponent<StateMachineComponent>();
     }
 
 
     // TODO: component's update manager is required
     public void OnFixedUpdate()
     {
-        actorStateMachine.OnFixedUpdate();
+        stateMachine.OnFixedUpdate(stateMachineData);
     }
     public void OnUpdate()
     {
-        actorStateMachine.OnUpdate();
-        actorInteractor.OnUpdate();
+        stateMachine.OnUpdate(stateMachineData);
     }
     public void OnLateUpdate()
     {
-        actorStateMachine.OnLateUpdate();
+        stateMachine.OnLateUpdate(stateMachineData);
     }
-
-
-#if UNITY_EDITOR
-    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject, UnityEditor.SerializedProperty targetProperty)
-    {
-        actorAnimation.OnInspectorGUI(editor, serializedObject.FindProperty(nameof(actorAnimation)));
-    }
-#endif
 }

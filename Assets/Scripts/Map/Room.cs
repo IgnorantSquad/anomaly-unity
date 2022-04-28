@@ -22,12 +22,4 @@ public class Room : CustomBehaviour
 
     }
 
-
-
-    #if UNITY_EDITOR
-    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedObject serializedObject, UnityEditor.SerializedProperty targetProperty)
-    {
-        base.OnInspectorGUI(editor, serializedObject, targetProperty);
-    }
-    #endif
 }

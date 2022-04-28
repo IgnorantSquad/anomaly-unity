@@ -1,10 +1,8 @@
 using Anomaly.Utils;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
-[System.Serializable]
+
+// TODO: Refactoring
 public partial class PhysicsComponent : Anomaly.CustomComponent
 {
     [SerializeField]
@@ -53,21 +51,3 @@ public partial class PhysicsComponent : Anomaly.CustomComponent
         rigidbodies.Container[name].velocity = Vector3.zero;
     }
 }
-
-
-
-#if UNITY_EDITOR
-
-public partial class PhysicsComponent
-{
-    public override void OnInspectorGUI(UnityEditor.Editor editor, SerializedProperty target)
-    {
-        GUILayout.BeginVertical("box");
-        rigidbodies.OnInspectorGUI(editor, target.FindPropertyRelative(nameof(rigidbodies)), "Rigidbodies");
-        GUILayout.Space(5);
-        //colliders.OnInspectorGUI(editor, target.FindPropertyRelative(nameof(colliders)), "Colliders");
-        GUILayout.EndVertical();
-    }
-}
-
-#endif

@@ -13,53 +13,37 @@ public enum AnimationTrack
 [System.Serializable]
 public class AnimationComponent : Anomaly.CustomComponent
 {
-    [SerializeField]
-    private SkeletonAnimation skeletonAnimation;
-
-    public Spine.AnimationState.TrackEntryDelegate onStartEvent, onEndEvent, onCompleteEvent;
-
-
-    public override void Initialize(CustomBehaviour target)
+    [System.Serializable]
+    [SharedComponentData(typeof(AnimationComponent))]
+    public class Data : CustomComponent.BaseData
     {
-        base.Initialize(target);
-        if (skeletonAnimation == null) return;
-        RegisterEvents();
-    }
+        public SkeletonAnimation skeletonAnimation;
 
-    public void AssignSkeletonAnimation(SkeletonAnimation sk)
-    {
-        skeletonAnimation = sk;
-        RegisterEvents();
-    }
-
-    private void RegisterEvents()
-    {
-        if (onStartEvent != null) skeletonAnimation.AnimationState.Start += onStartEvent;
-        if (onEndEvent != null) skeletonAnimation.AnimationState.End += onEndEvent;
-        if (onCompleteEvent != null) skeletonAnimation.AnimationState.Complete += onCompleteEvent;
+        //public Spine.AnimationState.TrackEntryDelegate onStartEvent, onEndEvent, onCompleteEvent;
     }
 
 
-    public Spine.TrackEntry Play(AnimationTrack track, string name, bool loop = false)
+    public void AssignSkeletonAnimation(Data target, SkeletonAnimation sk)
     {
-        return skeletonAnimation.AnimationState.SetAnimation((int)track, name, loop);
+        target.skeletonAnimation = sk;
+        RegisterEvents(target);
     }
 
-    public Spine.TrackEntry PlayAfter(AnimationTrack track, string name, bool loop = false, float delay = 0F)
+    private void RegisterEvents(Data target)
     {
-        return skeletonAnimation.AnimationState.AddAnimation((int)track, name, loop, delay);
+        //if (target.onStartEvent != null) target.skeletonAnimation.AnimationState.Start += target.onStartEvent;
+        //if (target.onEndEvent != null) target.skeletonAnimation.AnimationState.End += target.onEndEvent;
+        //if (target.onCompleteEvent != null) target.skeletonAnimation.AnimationState.Complete += target.onCompleteEvent;
     }
 
 
-#if UNITY_EDITOR
-    public override void OnInspectorGUI(UnityEditor.Editor editor, UnityEditor.SerializedProperty target)
+    public Spine.TrackEntry Play(Data target, AnimationTrack track, string name, bool loop = false)
     {
-        GUILayout.Space(5);
-        GUILayout.BeginVertical("box");
-        GUILayout.Label("Animation");
-        skeletonAnimation = UnityEditor.EditorGUILayout.ObjectField(skeletonAnimation, typeof(SkeletonAnimation), true) as SkeletonAnimation;
-        GUILayout.EndVertical();
-        GUILayout.Space(5);
+        return target.skeletonAnimation.AnimationState.SetAnimation((int)track, name, loop);
     }
-#endif
+
+    public Spine.TrackEntry PlayAfter(Data target, AnimationTrack track, string name, bool loop = false, float delay = 0F)
+    {
+        return target.skeletonAnimation.AnimationState.AddAnimation((int)track, name, loop, delay);
+    }
 }
