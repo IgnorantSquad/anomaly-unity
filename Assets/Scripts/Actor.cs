@@ -2,33 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Actor : Anomaly.CustomBehaviour
+public class Actor : Anomaly.CustomObject
 {
-    public TransformComponent actorTransform { get; protected set; } = new TransformComponent();
-    public AnimationComponent actorAnimation { get; protected set; } = new AnimationComponent();
-    public StateMachineComponent actorStateMachine { get; protected set; } = new StateMachineComponent();
+    public AnimationComponent.Data animationData;
 
-    public InteractorComponent actorInteractor { get; protected set; } = new InteractorComponent();
+    public StateMachineComponent.Data stateMachineData;
+
+
+    protected StateMachineComponent stateMachine;
+
 
     protected override void Initialize()
     {
         base.Initialize();
-        InitializeComponent(actorTransform, actorAnimation, actorStateMachine, actorInteractor);
+
+        stateMachine = GetSharedComponent<StateMachineComponent>();
     }
 
 
     // TODO: component's update manager is required
     public void OnFixedUpdate()
     {
-        actorStateMachine.OnFixedUpdate();
+        stateMachine.OnFixedUpdate(stateMachineData);
     }
     public void OnUpdate()
     {
-        actorStateMachine.OnUpdate();
-        actorInteractor.OnUpdate();
+        stateMachine.OnUpdate(stateMachineData);
     }
     public void OnLateUpdate()
     {
-        actorStateMachine.OnLateUpdate();
+        stateMachine.OnLateUpdate(stateMachineData);
     }
 }
