@@ -14,18 +14,26 @@ public class PlayerLocomotionState : State
     private CameraComponent camera;
 
 
-    public override void OnEnter(CustomBehaviour target)
+    public override void OnEnter(CustomObject target)
     {
         character = target.GetSharedComponent<CharacterComponent>();
         camera = target.GetSharedComponent<CameraComponent>();
     }
 
-    public override void OnExit(CustomBehaviour target)
+    public override void OnExit(CustomObject target)
     {
 
     }
 
-    public override void OnFixedUpdate(CustomBehaviour target)
+
+    public override bool IsTransition(out Identity next)
+    {
+        next = Identity.None;
+        return false;
+    }
+
+
+    public override void OnFixedUpdate(CustomObject target)
     {
         var player = target as Player;
         var physicsData = player.characterData.physicsData;
@@ -48,19 +56,19 @@ public class PlayerLocomotionState : State
         character.Move(player.characterData, moveDir);
     }
 
-    public override void OnUpdate(CustomBehaviour target)
+    public override void OnUpdate(CustomObject target)
     {
         var player = target as Player;
         var physicsData = player.characterData.physicsData;
 
-        
+
         if (Input.GetKeyDown(KeyCode.Space) && player.characterData.IsGrounded)
         {
             player.characterData.gravityValue = physicsData.jumpPower.Default;
             //player.actorPhysics.AddForce(Vector3.up * physicsData.jumpPower.Default, ForceMode.Impulse);
         }
 
-        if ((player.characterData.IsGrounded && player.characterData.gravityValue < 0F) 
+        if ((player.characterData.IsGrounded && player.characterData.gravityValue < 0F)
             || (player.characterData.IsCollidedAbove && player.characterData.gravityValue > 0F))
         {
             player.characterData.gravityValue = 0F;
@@ -76,7 +84,7 @@ public class PlayerLocomotionState : State
         //player.actorCamera.SetCameraHandlePosition(new Vector3(5F * h, 0.5f, -10F));
     }
 
-    public override void OnLateUpdate(CustomBehaviour target)
+    public override void OnLateUpdate(CustomObject target)
     {
 
     }

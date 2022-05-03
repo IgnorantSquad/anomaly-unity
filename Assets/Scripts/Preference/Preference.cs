@@ -1,51 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Anomaly;
 
 
-public class Preference : MonoBehaviour
-{
-    public static Preference Instance { get; private set; }
-
-    [SerializeField]
-    private PreferenceData setting;
-
-    public PreferenceData Current
+    public class Preference : CustomBehaviour
     {
-        get { return setting; }
-        set
+        public static Preference Instance { get; private set; }
+
+        [SerializeField]
+        private PreferenceData setting;
+
+        public PreferenceData Current
         {
-            setting = value;
+            get { return setting; }
+            set
+            {
+                setting = value;
+                OnSettingChanged();
+            }
+        }
+
+
+        void OnSettingChanged()
+        {
+            Application.targetFrameRate = setting.targetFrameRate;
+
+            QualitySettings.vSyncCount = setting.vSyncCount;
+
+            Cursor.visible = setting.isCursorVisible;
+            Cursor.lockState = setting.cursorLockMode;
+        }
+
+
+        protected override void Awake()
+        {
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
             OnSettingChanged();
         }
-    }
 
-
-    void OnSettingChanged()
-    {
-        Application.targetFrameRate = setting.targetFrameRate;
-
-        QualitySettings.vSyncCount = setting.vSyncCount;
-
-        Cursor.visible = setting.isCursorVisible;
-        Cursor.lockState = setting.cursorLockMode;
-    }
-
-
-    void Awake()
-    {
-        if (Instance != null)
+        private void Start()
         {
-            Destroy(gameObject);
-            return;
+            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Environment");
         }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-        OnSettingChanged();
     }
-
-    private void Start()
-    {
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Environment");
-    }
-}

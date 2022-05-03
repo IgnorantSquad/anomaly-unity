@@ -9,7 +9,7 @@ public class StateMachineComponent : CustomComponent
     [SharedComponentData(typeof(StateMachineComponent))]
     public class Data : CustomComponent.BaseData
     {
-        public CustomBehaviour caller;
+        public CustomObject caller;
         [SerializeField] private List<State> states = new List<State>();
 
 
@@ -43,7 +43,20 @@ public class StateMachineComponent : CustomComponent
         target.CurrentState?.OnEnter(target.caller);
     }
 
-    public void OnFixedUpdate(Data target) => target.CurrentState?.OnFixedUpdate(target.caller);
-    public void OnUpdate(Data target) => target.CurrentState?.OnUpdate(target.caller);
-    public void OnLateUpdate(Data target) => target.CurrentState?.OnLateUpdate(target.caller);
+    public void OnFixedUpdate(Data target)
+    {
+        target.CurrentState?.OnFixedUpdate(target.caller);
+    }
+    public void OnUpdate(Data target)
+    {
+        if (target.CurrentState != null && target.CurrentState.IsTransition(out var next))
+        {
+            ChangeState(target, next);
+        }
+        target.CurrentState?.OnUpdate(target.caller);
+    }
+    public void OnLateUpdate(Data target)
+    {
+        target.CurrentState?.OnLateUpdate(target.caller);
+    }
 }

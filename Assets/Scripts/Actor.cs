@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Actor : Anomaly.CustomBehaviour
+public class Actor : Anomaly.CustomObject
 {
     public AnimationComponent.Data animationData;
-    
+
     public StateMachineComponent.Data stateMachineData;
 
 
