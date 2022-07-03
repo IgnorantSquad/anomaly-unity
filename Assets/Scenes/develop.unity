@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 754101054}
   - component: {fileID: 754101053}
   - component: {fileID: 754101052}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Box
   m_TagString: Interactable
   m_Icon: {fileID: 0}
@@ -380,8 +380,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80bdaec6a1997224da3b5a60f0ab60ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationData:
-    skeletonAnimation: {fileID: 0}
   stateMachineData:
     caller: {fileID: 0}
 --- !u!65 &754101053
@@ -530,7 +528,7 @@ GameObject:
   - component: {fileID: 973729006}
   - component: {fileID: 973729005}
   - component: {fileID: 973729003}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -549,10 +547,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb9c2c973aaa62409685a475bf2cedd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationData:
-    skeletonAnimation: {fileID: 0}
   stateMachineData:
     caller: {fileID: 973729002}
+  animationData:
+    skeletonAnimation: {fileID: 0}
   characterData:
     gravityValue: 0
     gravityScale: 0.3
@@ -642,7 +640,7 @@ Transform:
   - {fileID: 1635554138}
   - {fileID: 1518846947}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1244580349
 GameObject:
@@ -693,7 +691,7 @@ Transform:
   - {fileID: 754101056}
   - {fileID: 603304288}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1461306505
 GameObject:
@@ -799,7 +797,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1518846947}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: CameraHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -832,7 +830,8 @@ GameObject:
   - component: {fileID: 1635554138}
   - component: {fileID: 1635554139}
   - component: {fileID: 1635554140}
-  m_Layer: 10
+  - component: {fileID: 1635554141}
+  m_Layer: 11
   m_Name: InteractionBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -875,18 +874,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1635554137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 984d28c8cbaec99429083c56cd02b3d3, type: 3}
+  m_Script: {fileID: 11500000, guid: f0ec0a82dc142784991c39b88db2e1e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onTriggerEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  onTriggerStay:
-    m_PersistentCalls:
-      m_Calls: []
-  onTriggerEnd:
-    m_PersistentCalls:
-      m_Calls: []
+--- !u!54 &1635554141
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635554137}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1697294965
 GameObject:
   m_ObjectHideFlags: 0
