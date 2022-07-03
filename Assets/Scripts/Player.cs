@@ -3,10 +3,12 @@ using Anomaly;
 
 public class Player : Actor
 {
+    public SpineComponent.Data animationData;
+
     public CharacterComponent.Data characterData;
 
     public CameraComponent.Data cameraData;
-    
+
 
     protected override void Initialize()
     {

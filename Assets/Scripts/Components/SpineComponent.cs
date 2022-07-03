@@ -11,10 +11,10 @@ public enum AnimationTrack
 }
 
 [System.Serializable]
-public class AnimationComponent : Anomaly.CustomComponent
+public class SpineComponent : Anomaly.CustomComponent
 {
     [System.Serializable]
-    [SharedComponentData(typeof(AnimationComponent))]
+    [SharedComponentData(typeof(SpineComponent))]
     public class Data : CustomComponent.BaseData
     {
         public SkeletonAnimation skeletonAnimation;
