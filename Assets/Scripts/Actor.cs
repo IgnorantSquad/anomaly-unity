@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Actor : Anomaly.CustomObject
 {
-    public AnimationComponent.Data animationData;
-
     public StateMachineComponent.Data stateMachineData;
 
 

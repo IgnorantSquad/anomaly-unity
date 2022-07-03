@@ -8,16 +8,16 @@ public class PlayerInteractionState : State
 {
     public override Identity ID => State.Identity.PlayerInteraction;
 
-    private TriggerListener trigger;
+    private TriggerListListener triggerList;
+
 
     public override void OnEnter(CustomObject target)
     {
-        trigger = target.GetComponentInChildren<TriggerListener>();
+        triggerList = target.GetComponentInChildren<TriggerListListener>();
     }
 
     public override void OnExit(CustomObject target)
     {
-
     }
 
 
@@ -34,22 +34,19 @@ public class PlayerInteractionState : State
 
     public override void OnUpdate(CustomObject target)
     {
-        if (trigger == null) return;
-        if (trigger.colliderList.Count == 0) return;
+        if (triggerList == null) return;
+
         if (Input.GetKeyDown(KeyCode.F))
         {
-            foreach (var coll in trigger.colliderList["Interactable"])
+            for (int i = 0; i < triggerList.List.Count; ++i)
             {
-                Managers.Event.AddEvent(EventPool.Get<HitEvent>(), new EventParam() { sender = target.gameObject, receiver = coll.gameObject });
-                //(target as Actor).actorInteractor.Send(coll.GetComponent<Actor>(), new HitEvent(target as Actor, coll.GetComponent<Actor>()));
-                //coll.GetComponent<Actor>().actorInteractor.Receive(target as Actor, new HitEvent(target as Actor, coll.GetComponent<Actor>()));
+                if (triggerList.List[i].tag != "Interactable") continue;
+                Managers.Event.AddEvent(EventPool.Get<HitEvent>(), new EventParam() { sender = target.gameObject, receiver = triggerList.List[i].gameObject });
             }
         }
-
     }
 
     public override void OnLateUpdate(CustomObject target)
     {
-
     }
 }
