@@ -25,10 +25,6 @@ public class ActorStatusEditor : Editor
     public override void OnInspectorGUI()
     {
         var self = target as ActorStatus;
-
-        self.HP.OnInspectorGUI("HP");
-        self.MP.OnInspectorGUI("MP");
-        self.Stamina.OnInspectorGUI("Stamina");
     }
 }
 
