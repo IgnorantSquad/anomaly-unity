@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80bdaec6a1997224da3b5a60f0ab60ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachineData:
+  StateMachine:
     caller: {fileID: 0}
 --- !u!65 &754101053
 BoxCollider:
@@ -709,16 +709,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb9c2c973aaa62409685a475bf2cedd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachineData:
+  StateMachine:
     caller: {fileID: 973729002}
-  animationData:
+  Spine:
     skeletonAnimation: {fileID: 0}
-  characterData:
+  Character:
     gravityValue: 0
     gravityScale: 0.3
     controller: {fileID: 973729003}
     physicsData: {fileID: 11400000, guid: a2a2e433ed8b4ff4c946baa94ddcd6aa, type: 2}
-  cameraData:
+  Camera:
     virtualCamera: {fileID: 356944606}
     cameraHandle: {fileID: 1518846947}
 --- !u!143 &973729003
