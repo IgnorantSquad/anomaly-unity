@@ -4,34 +4,31 @@ using UnityEngine;
 using Anomaly;
 using Cinemachine;
 
-
+[System.Serializable]
 public class CameraComponent : CustomComponent
 {
-    [System.Serializable]
-    [SharedComponentData(typeof(CameraComponent))]
-    public class Data : CustomComponent.BaseData
-    {
-        public CinemachineVirtualCamera virtualCamera;
+    [SerializeField]
+    private CinemachineVirtualCamera virtualCamera;
 
-        public Transform cameraHandle;
-    }
+    [SerializeField]
+    private Transform cameraHandle;
 
 
     #region Camera Transform
-    public void SetCameraHandlePosition(Data target, Vector3 pos)
+    public void SetCameraHandlePosition(Vector3 pos)
     {
-        target.cameraHandle.localPosition = pos;
+        cameraHandle.localPosition = pos;
     }
     #endregion
 
 
-    public void SetOrthographicSize(Data target, float ortho = 7F)
+    public void SetOrthographicSize(float ortho = 7F)
     {
-        target.virtualCamera.m_Lens.OrthographicSize = ortho;
+        virtualCamera.m_Lens.OrthographicSize = ortho;
     }
 
-    public void SetCameraBound(Data target, CompositeCollider2D coll)
+    public void SetCameraBound(CompositeCollider2D coll)
     {
-        target.virtualCamera.GetComponent<CinemachineConfiner>().m_BoundingShape2D = coll;
+        virtualCamera.GetComponent<CinemachineConfiner>().m_BoundingShape2D = coll;
     }
 }

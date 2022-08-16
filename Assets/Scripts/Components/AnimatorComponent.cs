@@ -4,31 +4,27 @@ using Anomaly;
 [System.Serializable]
 public class AnimatorComponent : Anomaly.CustomComponent
 {
-    [System.Serializable]
-    [SharedComponentData(typeof(AnimatorComponent))]
-    public class Data : CustomComponent.BaseData
+    [SerializeField]
+    private Animator animator;
+
+
+    public void SetFloat(string key, float value)
     {
-        public Animator animator;
+        animator.SetFloat(key, value);
     }
 
-
-    public void SetFloat(Data target, string key, float value)
+    public void SetInteger(string key, int value)
     {
-        target.animator.SetFloat(key, value);
+        animator.SetInteger(key, value);
     }
 
-    public void SetInteger(Data target, string key, int value)
+    public void SetBool(string key, bool value)
     {
-        target.animator.SetInteger(key, value);
+        animator.SetBool(key, value);
     }
 
-    public void SetBool(Data target, string key, bool value)
+    public void SetTrigger(string key)
     {
-        target.animator.SetBool(key, value);
-    }
-
-    public void SetTrigger(Data target, string key)
-    {
-        target.animator.SetTrigger(key);
+        animator.SetTrigger(key);
     }
 }

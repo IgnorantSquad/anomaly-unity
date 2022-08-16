@@ -14,36 +14,37 @@ public class PlayerLocomotionState : State
     private CameraComponent camera;
 
 
-    public override void OnEnter(CustomObject target)
+    public override void OnEnter(CustomBehaviour target)
     {
-        character = target.GetSharedComponent<CharacterComponent>();
-        camera = target.GetSharedComponent<CameraComponent>();
+        var player = target as Player;
+        character = player.Character;
+        camera = player.Camera;
     }
 
-    public override void OnExit(CustomObject target)
+    public override void OnExit(CustomBehaviour target)
     {
 
     }
 
 
-    public override bool IsTransition(out Identity next)
+    public override bool IsTransition(CustomBehaviour target, out Identity next)
     {
         next = Identity.None;
         return false;
     }
 
 
-    public override void OnFixedUpdate(CustomObject target)
+    public override void OnFixedUpdate(CustomBehaviour target)
     {
         var player = target as Player;
-        var physicsData = player.characterData.physicsData;
+        var physicsData = player.Character.PhysicsData;
 
-        character.CalculateGravity(player.characterData);
+        character.CalculateGravity();
 
         float moveSpeed = Input.GetKey(KeyCode.LeftShift) ? physicsData.moveSpeed.Get("Run") : physicsData.moveSpeed.Default;
 
-        Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime, player.characterData.gravityValue, 0F);
-        Vector3 slideVector = character.GetSlideVector(player.characterData, player.transform, 2F);
+        Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime, player.Character.Gravity.value, 0F);
+        Vector3 slideVector = character.GetSlideVector(player.transform, 2F);
 
         if (Mathf.Abs(moveDir.x + slideVector.x) < Mathf.Abs(moveDir.x) && moveDir.y <= 0F)
         {
@@ -53,25 +54,25 @@ public class PlayerLocomotionState : State
         moveDir += slideVector;
 
         //player.actorPhysics.Move(moveDir * Time.deltaTime * moveSpeed);
-        character.Move(player.characterData, moveDir);
+        character.Move(moveDir);
     }
 
-    public override void OnUpdate(CustomObject target)
+    public override void OnUpdate(CustomBehaviour target)
     {
         var player = target as Player;
-        var physicsData = player.characterData.physicsData;
+        var physicsData = player.Character.PhysicsData;
 
 
-        if (Input.GetKeyDown(KeyCode.Space) && player.characterData.IsGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && player.Character.IsGrounded)
         {
-            player.characterData.gravityValue = physicsData.jumpPower.Default;
+            player.Character.SetGravityValue(physicsData.jumpPower.Default);
             //player.actorPhysics.AddForce(Vector3.up * physicsData.jumpPower.Default, ForceMode.Impulse);
         }
 
-        if ((player.characterData.IsGrounded && player.characterData.gravityValue < 0F)
-            || (player.characterData.IsCollidedAbove && player.characterData.gravityValue > 0F))
+        if ((player.Character.IsGrounded && player.Character.Gravity.value < 0F)
+            || (player.Character.IsCollidedAbove && player.Character.Gravity.value > 0F))
         {
-            player.characterData.gravityValue = 0F;
+            player.Character.SetGravityValue(0F);
         }
 
         //if (moveDir.x > 0F) handlePos = new Vector3(2.5f, 0.5f, -10F);
@@ -80,11 +81,11 @@ public class PlayerLocomotionState : State
         else if (Input.mousePosition.x < Screen.width * 0.35f) handlePos = new Vector3(-2.5F, 0.5f, -10F);
         //handlePos = moveDir.x > 0F ? new Vector3(5F, 0.5f, -10F) : moveDir.x < 0F ? new Vector3(-5F, 0.5f, -10F) : handlePos;
 
-        camera.SetCameraHandlePosition(player.cameraData, handlePos);
+        camera.SetCameraHandlePosition(handlePos);
         //player.actorCamera.SetCameraHandlePosition(new Vector3(5F * h, 0.5f, -10F));
     }
 
-    public override void OnLateUpdate(CustomObject target)
+    public override void OnLateUpdate(CustomBehaviour target)
     {
 
     }
