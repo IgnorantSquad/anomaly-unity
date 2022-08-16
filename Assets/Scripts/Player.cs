@@ -3,23 +3,20 @@ using Anomaly;
 
 public class Player : Actor
 {
-    public SpineComponent.Data animationData;
+    public SpineComponent Spine;
 
-    public CharacterComponent.Data characterData;
+    public CharacterComponent Character;
 
-    public CameraComponent.Data cameraData;
+    public CameraComponent Camera;
 
 
     protected override void Initialize()
     {
         base.Initialize();
 
-        stateMachineData.AddStates(
+        StateMachine.Run(0,
             State.Bind(
                 State.New<PlayerLocomotionState>(),
-                State.New<PlayerInteractionState>())
-        );
-
-        stateMachine.Run(stateMachineData);
+                State.New<PlayerInteractionState>()));
     }
 }

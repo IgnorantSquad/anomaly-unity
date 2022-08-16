@@ -11,28 +11,28 @@ public class PlayerInteractionState : State
     private TriggerListListener triggerList;
 
 
-    public override void OnEnter(CustomObject target)
+    public override void OnEnter(CustomBehaviour target)
     {
         triggerList = target.GetComponentInChildren<TriggerListListener>();
     }
 
-    public override void OnExit(CustomObject target)
+    public override void OnExit(CustomBehaviour target)
     {
     }
 
 
-    public override bool IsTransition(out Identity next)
+    public override bool IsTransition(CustomBehaviour target, out Identity next)
     {
         next = Identity.None;
         return false;
     }
 
 
-    public override void OnFixedUpdate(CustomObject target)
+    public override void OnFixedUpdate(CustomBehaviour target)
     {
     }
 
-    public override void OnUpdate(CustomObject target)
+    public override void OnUpdate(CustomBehaviour target)
     {
         if (triggerList == null) return;
 
@@ -46,7 +46,7 @@ public class PlayerInteractionState : State
         }
     }
 
-    public override void OnLateUpdate(CustomObject target)
+    public override void OnLateUpdate(CustomBehaviour target)
     {
     }
 }

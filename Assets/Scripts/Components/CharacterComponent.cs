@@ -6,39 +6,42 @@ using Anomaly;
 [System.Serializable]
 public class CharacterComponent : CustomComponent
 {
-    [System.Serializable]
-    [SharedComponentData(typeof(CharacterComponent))]
-    public class Data : CustomComponent.BaseData
+    [SerializeField]
+    private float gravityValue = 0F;
+
+    [SerializeField]
+    private float gravityScale = 1F;
+
+    [SerializeField]
+    private CharacterController controller;
+
+    [SerializeField]
+    private PhysicsData physicsData;
+
+
+    public (float value, float scale) Gravity => (gravityValue, gravityScale);
+
+    public bool IsGrounded => controller.isGrounded;
+
+    public bool IsCollidedAbove => (controller.collisionFlags & CollisionFlags.CollidedAbove) != 0;
+    public bool IsCollidedBelow => (controller.collisionFlags & CollisionFlags.CollidedBelow) != 0;
+    public bool IsCollidedSide => (controller.collisionFlags & CollisionFlags.Sides) != 0;
+
+    public PhysicsData PhysicsData => physicsData;
+
+
+    public CollisionFlags Move(Vector3 move)
     {
-        public float gravityValue = 0F;
-    
-        public float gravityScale = 1F;
-
-        public CharacterController controller;
-
-        public PhysicsData physicsData;
-
-
-        public bool IsGrounded => controller.isGrounded;
-    
-        public bool IsCollidedAbove => (controller.collisionFlags & CollisionFlags.CollidedAbove) != 0;
-        public bool IsCollidedBelow => (controller.collisionFlags & CollisionFlags.CollidedBelow) != 0;
-        public bool IsCollidedSide => (controller.collisionFlags & CollisionFlags.Sides) != 0;
+        return controller.Move(move);
     }
 
-
-    public CollisionFlags Move(Data target, Vector3 move) 
-    {
-        return target.controller.Move(move);
-    }
-
-    public Vector3 GetSlideVector(Data target, Transform actor, float slideSpeed)
+    public Vector3 GetSlideVector(Transform actor, float slideSpeed)
     {
         var transform = actor.transform;
 
-        float radius = target.controller.radius * transform.localScale.x;
-        float height = target.controller.height * transform.localScale.y;
-        Vector3 center = new Vector3(target.controller.center.x * transform.localScale.x, target.controller.center.y * transform.localScale.y, target.controller.center.z * transform.localScale.z);
+        float radius = controller.radius * transform.localScale.x;
+        float height = controller.height * transform.localScale.y;
+        Vector3 center = new Vector3(controller.center.x * transform.localScale.x, controller.center.y * transform.localScale.y, controller.center.z * transform.localScale.z);
 
         Vector3 std = transform.position + center - transform.up * (height - 1F) * 0.5f;
 
@@ -55,8 +58,19 @@ public class CharacterComponent : CustomComponent
         return (transform.right * Mathf.Sign(dot) - transform.up) * threshold * Time.fixedDeltaTime * slideSpeed;
     }
 
-    public void CalculateGravity(Data target) 
+    public void CalculateGravity()
     {
-        target.gravityValue += target.gravityScale * Time.fixedDeltaTime * Physics.gravity.y;
+        gravityValue += gravityScale * Time.fixedDeltaTime * Physics.gravity.y;
+    }
+
+
+    public void SetGravityValue(float value)
+    {
+        gravityValue = value;
+    }
+
+    public void SetGravityScale(float scale)
+    {
+        gravityScale = scale;
     }
 }
