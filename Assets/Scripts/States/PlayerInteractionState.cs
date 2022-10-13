@@ -4,49 +4,48 @@ using UnityEngine;
 using Anomaly;
 
 
-public class PlayerInteractionState : State
+public class PlayerInteractionState : State<Player>
 {
-    public override Identity ID => State.Identity.PlayerInteraction;
-
-    private TriggerListListener triggerList;
+    public override StateID ID => StateID.PlayerInteraction;
 
 
-    public override void OnEnter(CustomBehaviour target)
+    public override void OnEnter(Player target)
     {
-        triggerList = target.GetComponentInChildren<TriggerListListener>();
     }
 
-    public override void OnExit(CustomBehaviour target)
+    public override void OnExit(Player target)
     {
     }
 
 
-    public override bool IsTransition(CustomBehaviour target, out Identity next)
+    public override bool IsTransition(Player target, out StateID next)
     {
-        next = Identity.None;
+        next = StateID.None;
         return false;
     }
 
 
-    public override void OnFixedUpdate(CustomBehaviour target)
+    public override void OnFixedUpdate(Player target)
     {
     }
 
-    public override void OnUpdate(CustomBehaviour target)
+    public override void OnUpdate(Player target)
     {
-        if (triggerList == null) return;
+        if (target.Entry == null) return;
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            for (int i = 0; i < triggerList.List.Count; ++i)
+            foreach (var collider in target.Entry.EntryList)
             {
-                if (triggerList.List[i].tag != "Interactable") continue;
-                Managers.Event.AddEvent(EventPool.Get<HitEvent>(), new EventParam() { sender = target.gameObject, receiver = triggerList.List[i].gameObject });
+                var interactable = collider.gameObject.GetComponent<Interactable>();
+                if (interactable == null) continue;
+                target.SendEvent<TestInteractEvent>(to: interactable, new TestInteractEvent());
+                break;
             }
         }
     }
 
-    public override void OnLateUpdate(CustomBehaviour target)
+    public override void OnLateUpdate(Player target)
     {
     }
 }

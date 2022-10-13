@@ -2,10 +2,10 @@ using Anomaly;
 using UnityEngine;
 
 
-public class HitEvent : Anomaly.BaseEvent
+public class TestInteractEvent : Anomaly.BaseEvent
 {
-    public override void Invoke(EventParam param)
+    public override void Invoke()
     {
-        Debug.Log($"{param.sender.name} hit {param.receiver.name}");
+        Debug.Log($"{sender.name} interact {receiver.name}");
     }
 }
