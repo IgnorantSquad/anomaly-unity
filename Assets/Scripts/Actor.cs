@@ -4,5 +4,4 @@ using UnityEngine;
 
 public class Actor : Anomaly.CustomBehaviour
 {
-    public StateMachineComponent StateMachine;
 }

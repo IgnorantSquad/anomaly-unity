@@ -3,17 +3,17 @@ using UnityEngine;
 using Anomaly;
 
 [System.Serializable]
-public class StateMachineComponent : CustomComponent, IFixedUpdater, IUpdater, ILateUpdater
+public class StateMachineComponent<T> : CustomComponent, IFixedUpdater, IUpdater, ILateUpdater where T : CustomBehaviour
 {
     [SerializeField]
-    private CustomBehaviour caller;
+    private T caller;
 
-    private List<State> states = new List<State>();
+    private List<State<T>> states = new List<State<T>>();
 
-    public State CurrentState { get; private set; }
+    public State<T> CurrentState { get; private set; }
 
 
-    public void Run(int entryIndex = 0, params State[] states)
+    public void Run(int entryIndex = 0, params State<T>[] states)
     {
         this.states.AddRange(states);
 
@@ -21,7 +21,7 @@ public class StateMachineComponent : CustomComponent, IFixedUpdater, IUpdater, I
         ChangeState(entryIndex);
     }
 
-    public void ChangeState(State.Identity id)
+    public void ChangeState(StateID id)
     {
         ChangeState(states.FindIndex(s => s.ID == id));
     }

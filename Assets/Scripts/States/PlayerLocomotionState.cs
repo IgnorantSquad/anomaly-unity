@@ -4,9 +4,9 @@ using UnityEngine;
 using Anomaly;
 
 
-public class PlayerLocomotionState : State
+public class PlayerLocomotionState : State<Player>
 {
-    public override Identity ID => State.Identity.PlayerLocomotion;
+    public override StateID ID => StateID.PlayerLocomotion;
 
     private Vector3 handlePos = new Vector3(5F, 0.5f, -10F);
 
@@ -14,37 +14,35 @@ public class PlayerLocomotionState : State
     private CameraComponent camera;
 
 
-    public override void OnEnter(CustomBehaviour target)
+    public override void OnEnter(Player target)
     {
-        var player = target as Player;
-        character = player.Character;
-        camera = player.Camera;
+        character = target.Character;
+        camera = target.Camera;
     }
 
-    public override void OnExit(CustomBehaviour target)
+    public override void OnExit(Player target)
     {
 
     }
 
 
-    public override bool IsTransition(CustomBehaviour target, out Identity next)
+    public override bool IsTransition(Player target, out StateID next)
     {
-        next = Identity.None;
+        next = StateID.None;
         return false;
     }
 
 
-    public override void OnFixedUpdate(CustomBehaviour target)
+    public override void OnFixedUpdate(Player target)
     {
-        var player = target as Player;
-        var physicsData = player.Character.PhysicsData;
+        var physicsData = target.Character.PhysicsData;
 
         character.CalculateGravity();
 
         float moveSpeed = Input.GetKey(KeyCode.LeftShift) ? physicsData.moveSpeed.Get("Run") : physicsData.moveSpeed.Default;
 
-        Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime, player.Character.Gravity.value, 0F);
-        Vector3 slideVector = character.GetSlideVector(player.transform, 2F);
+        Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime, target.Character.Gravity.value, 0F);
+        Vector3 slideVector = character.GetSlideVector(target.transform, 2F);
 
         if (Mathf.Abs(moveDir.x + slideVector.x) < Mathf.Abs(moveDir.x) && moveDir.y <= 0F)
         {
@@ -53,26 +51,25 @@ public class PlayerLocomotionState : State
 
         moveDir += slideVector;
 
-        //player.actorPhysics.Move(moveDir * Time.deltaTime * moveSpeed);
+        //target.actorPhysics.Move(moveDir * Time.deltaTime * moveSpeed);
         character.Move(moveDir);
     }
 
-    public override void OnUpdate(CustomBehaviour target)
+    public override void OnUpdate(Player target)
     {
-        var player = target as Player;
-        var physicsData = player.Character.PhysicsData;
+        var physicsData = target.Character.PhysicsData;
 
 
-        if (Input.GetKeyDown(KeyCode.Space) && player.Character.IsGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && target.Character.IsGrounded)
         {
-            player.Character.SetGravityValue(physicsData.jumpPower.Default);
-            //player.actorPhysics.AddForce(Vector3.up * physicsData.jumpPower.Default, ForceMode.Impulse);
+            target.Character.SetGravityValue(physicsData.jumpPower.Default);
+            //target.actorPhysics.AddForce(Vector3.up * physicsData.jumpPower.Default, ForceMode.Impulse);
         }
 
-        if ((player.Character.IsGrounded && player.Character.Gravity.value < 0F)
-            || (player.Character.IsCollidedAbove && player.Character.Gravity.value > 0F))
+        if ((target.Character.IsGrounded && target.Character.Gravity.value < 0F)
+            || (target.Character.IsCollidedAbove && target.Character.Gravity.value > 0F))
         {
-            player.Character.SetGravityValue(0F);
+            target.Character.SetGravityValue(0F);
         }
 
         //if (moveDir.x > 0F) handlePos = new Vector3(2.5f, 0.5f, -10F);
@@ -82,10 +79,10 @@ public class PlayerLocomotionState : State
         //handlePos = moveDir.x > 0F ? new Vector3(5F, 0.5f, -10F) : moveDir.x < 0F ? new Vector3(-5F, 0.5f, -10F) : handlePos;
 
         camera.SetCameraHandlePosition(handlePos);
-        //player.actorCamera.SetCameraHandlePosition(new Vector3(5F * h, 0.5f, -10F));
+        //target.actorCamera.SetCameraHandlePosition(new Vector3(5F * h, 0.5f, -10F));
     }
 
-    public override void OnLateUpdate(CustomBehaviour target)
+    public override void OnLateUpdate(Player target)
     {
 
     }
